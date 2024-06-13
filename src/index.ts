@@ -1,25 +1,36 @@
-import sql from '$lib/db';
 import Tags from '$routes/tags';
 import Assets from '$routes/assets';
 
 const server = Bun.serve({
     async fetch(req: Request) {
-        const url = new URL(req.url);
+        const uri = new URL(req.url);
 
-        switch(url.pathname) {
-            case "/tags":
-                return Tags(req);
-            case "/assets":
-                return Assets(req);
-            default:
-                break;
+        const res = await response(uri, req);
+
+        if(res) {
+            console.log(`${res.status} ${req.method} ${uri.pathname}`);
+            return res;
         }
 
         return new Response(`This route doesn't exist`, {
             status: 404
         });
     },
-    hostname: '0.0.0.0'
+    hostname: process.env.HOST ?? '0.0.0.0',
+    port: parseInt(process.env.PORT ?? '3000')
 });
 
-console.log(`Hosting Resonite Workshop ${server.url.href}`);
+async function response(url: import('url').URL, req: Request): Promise<Response | null> {
+    switch(url.pathname) {
+    case "/tags":
+        return await Tags(req);
+    case "/assets":
+        return await Assets(req);
+    default:
+        break;
+    }
+
+    return null;
+}
+
+console.log(`Hosting Resonite Workshop at ${server.url.href}`);
