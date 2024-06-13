@@ -9,7 +9,7 @@ const server = Bun.serve({
         console.log(`${res.status} ${req.method} ${uri.pathname}`);
         return res;
     },
-    hostname: process.env.HOST ?? '0.0.0.0',
+    hostname: process.env.HOST ?? 'localhost',
     port: parseInt(process.env.PORT ?? '3000')
 });
 
