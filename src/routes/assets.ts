@@ -12,8 +12,8 @@ export default async function(req: Request) {
     const res = await sql`
     SELECT assets.title, assets.description, assets.uploader, assets.resource_url
     FROM tag_bridge 
-    INNER JOIN assets ON tag_bridge.asset=assets.id
-    WHERE tag_bridge.tag=${encodeURIComponent(tag)}
+    INNER JOIN assets ON tag_bridge.asset = assets.id
+    WHERE tag_bridge.tag = ${encodeURIComponent(tag)}
     ORDER BY assets.created_at OFFSET ${offset * WINDOW_SIZE} LIMIT ${WINDOW_SIZE};`
     
     const text = res.reduce((acc, row) => {
